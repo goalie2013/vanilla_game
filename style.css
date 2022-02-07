@@ -1,0 +1,66 @@
+/* Background Image Full Screen */
+html {
+  background: url(./images/sky-background.png) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#startMenu {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+#scorediv {
+  display: none;
+  position: absolute;
+  left: 90%;
+  top: 10%;
+  font-size: 24px;
+}
+
+.ballGeneral {
+  z-index: 5;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+#ball {
+  left: 0px;
+  top: 0px;
+  background: green;
+}
+
+#ball2 {
+  left: 300px;
+  top: 0px;
+  background: red;
+}
+
+#trampoline {
+  position: absolute;
+  top: 650px;
+  left: 600px;
+  border: 3px solid blue;
+}
+
+.btn {
+  display: none;
+  position: absolute;
+  padding: 15px;
+  width: 100px;
+}
+
+#resetBtn {
+  left: 90%;
+  top: 40%;
+}
+
+#mainMenuBtn {
+  left: 90%;
+  top: 50%;
+}
