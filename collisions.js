@@ -43,6 +43,7 @@ function _checkIfCollision(
     isGoingDown = !isGoingDown;
 
     createRandomBall(ballsArr);
+    score.textContent++;
   }
 }
 

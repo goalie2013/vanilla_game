@@ -1,6 +1,6 @@
 //import { detectCollision } from "./collisions";
 
-const velocity = 20;
+const velocity = 30;
 let ballsArr = [];
 let positionX, positionY, isGoingRight, isGoingDown;
 const startMenu = document.getElementById("startMenu");
@@ -66,12 +66,16 @@ function moveBall() {
   // const ballPos = getPositionAtCenter(ball);
   // const ball2Pos = getPositionAtCenter(ball2);
   // console.log(distanceBtwnEls(ball, ball2));
-  console.log("ball.style.left: ", ball.style.left);
+  //console.log("ball.style.left: ", ball.style.left);
   //console.log("aPos.x: ", ballPos.x);
   // console.log("centerPt.style.left: ", centerPt.style.left);
-  console.log("ballsArr size: ", ballsArr.length);
+  //console.log("ballsArr size: ", ballsArr.length);
+  console.log("outerWidth: ", window.outerWidth);
+  console.log("innerWidth: ", window.innerWidth);
+  console.log("ball.style.width: ", ball.getBoundingClientRect().width);
 
-  const screenWdth = window.innerWidth;
+  const screenWdth = window.outerWidth - ball.getBoundingClientRect().width;
+  const screenHeight = window.outerHeight - ball.getBoundingClientRect().height;
 
   if (isGoingRight) {
     positionX = positionX + velocity;
@@ -90,12 +94,12 @@ function moveBall() {
   }
 
   if (positionX >= screenWdth || positionX <= 0) {
-    score.textContent++;
+    //score.textContent++;
     isGoingRight = !isGoingRight;
   }
 
-  if (positionY >= window.innerHeight || positionY <= 0) {
-    score.textContent++;
+  if (positionY >= screenHeight || positionY <= 0) {
+    //score.textContent++;
     isGoingDown = !isGoingDown;
   }
 
