@@ -1,4 +1,5 @@
 //import { detectCollision } from "./collisions";
+"use strict";
 
 const velocity = 30;
 let ballsArr = [];
@@ -7,76 +8,84 @@ const startMenu = document.getElementById("startMenu");
 const startBtn = document.getElementById("startBtn");
 const ball = document.getElementById("ball");
 const ball2 = document.getElementById("ball2");
-const trampoline = document.getElementById("trampoline");
+const avatar = document.getElementById("avatar");
 const resetBtn = document.getElementById("resetBtn");
 const mainMenuBtn = document.getElementById("mainMenuBtn");
+const menuBoard = document.querySelector(".menuBoard");
 const score = document.getElementById("score");
 const highScore = document.getElementById("high-score");
-const scoreDiv = document.getElementById("scorediv");
 
 const init = function () {
   positionX = 0;
   positionY = 0;
   isGoingRight = true;
   isGoingDown = true;
+
+  // Initial ball location
   ball.style.left = positionX + "px";
   ball.style.top = positionY + "px";
 
-  if (score.textContent > highScore.textContent) {
+  // Check for new Highscore
+  if (score.textContent > highScore.textContent)
     highScore.textContent = score.textContent;
-  }
   score.textContent = 0;
 
-  //for (ball of ballsArr) {
-  //  ball.style.display = "none";
-  //}
+  // Remove all other balls
   for (let i = ballsArr.length - 1; i >= 0; i--) {
     ballsArr[i].remove();
     ballsArr.pop();
   }
-  //ballsArr.push(createBall());
 };
 
+// Event Listener to move avatar
 document.addEventListener("keydown", keyPressed);
+
+// Event Listener to start the game
 startBtn.addEventListener("click", function () {
-  init();
   startMenu.style.display = "none";
-  scoreDiv.style.display = "block";
-  resetBtn.style.display = "block";
-  mainMenuBtn.style.display = "block";
   ball.style.display = "block";
+  menuBoard.classList.remove("hidden");
+  init();
 });
+
+// Event Listener to restart the game
 resetBtn.addEventListener("click", function () {
   init();
 });
+
+// Event Listener to end game and go to main menu
 mainMenuBtn.addEventListener("click", function () {
   startMenu.style.display = "block";
-  scoreDiv.style.display = "none";
-  resetBtn.style.display = "none";
-  mainMenuBtn.style.display = "none";
   ball.style.display = "none";
+  menuBoard.classList.add("hidden");
   init();
 });
+
+////// Setup game features
 
 init();
 
 setInterval(moveBall, 100);
 
 function moveBall() {
-  // const ballPos = getPositionAtCenter(ball);
-  // const ball2Pos = getPositionAtCenter(ball2);
   // console.log(distanceBtwnEls(ball, ball2));
-  //console.log("ball.style.left: ", ball.style.left);
   //console.log("aPos.x: ", ballPos.x);
   // console.log("centerPt.style.left: ", centerPt.style.left);
   //console.log("ballsArr size: ", ballsArr.length);
-  console.log("outerWidth: ", window.outerWidth);
-  console.log("innerWidth: ", window.innerWidth);
-  console.log("ball.style.width: ", ball.getBoundingClientRect().width);
+  // console.log("outerWidth: ", window.outerWidth);
+  // console.log("innerWidth: ", window.innerWidth);
+  // console.log("ball.style.width: ", ball.getBoundingClientRect().width);
+  // console.log("ball.style.left: ", ball.style.left);
+
+  if (ball.style.display === "none") {
+    console.log("NONEEEEE");
+    return;
+  }
 
   const screenWdth = window.outerWidth - ball.getBoundingClientRect().width;
   const screenHeight = window.outerHeight - ball.getBoundingClientRect().height;
 
+  // Move ball horizontally
   if (isGoingRight) {
     positionX = positionX + velocity;
     ball.style.left = positionX + "px";
@@ -85,6 +94,7 @@ function moveBall() {
     ball.style.left = positionX + "px";
   }
 
+  // Move ball vertically
   if (isGoingDown) {
     positionY = positionY + velocity;
     ball.style.top = positionY + "px";
@@ -93,17 +103,14 @@ function moveBall() {
     ball.style.top = positionY + "px";
   }
 
-  if (positionX >= screenWdth || positionX <= 0) {
-    //score.textContent++;
-    isGoingRight = !isGoingRight;
-  }
+  // Change x direction when x-boundary hit
+  if (positionX >= screenWdth || positionX <= 0) isGoingRight = !isGoingRight;
 
-  if (positionY >= screenHeight || positionY <= 0) {
-    //score.textContent++;
-    isGoingDown = !isGoingDown;
-  }
+  // Change y direction when y-boundary hit
+  if (positionY >= screenHeight || positionY <= 0) isGoingDown = !isGoingDown;
 
-  detectCollision(ball, trampoline, ballsArr);
+  // Detect collision between ball and user
+  detectCollision(ball, avatar, ballsArr);
 }
 
 function getPositionAtCenter(el) {
@@ -130,13 +137,11 @@ function keyPressed() {
       break;
     case "ArrowRight":
       // ball2.style.left = Number(ball2.style.left.slice(0, -2)) + 20 + "px";
-      trampoline.style.left =
-        Number(trampoline.style.left.slice(0, -2)) + 20 + "px";
+      avatar.style.left = Number(avatar.style.left.slice(0, -2)) + 20 + "px";
       break;
     case "ArrowLeft":
       // ball2.style.left = Number(ball2.style.left.slice(0, -2)) - 20 + "px";
-      trampoline.style.left =
-        Number(trampoline.style.left.slice(0, -2)) - 20 + "px";
+      avatar.style.left = Number(avatar.style.left.slice(0, -2)) - 20 + "px";
       break;
   }
 }

@@ -1,3 +1,5 @@
+let timeOriginal = Date.now();
+
 function detectCollision(ball, avatar, ballsArr) {
   const ballWdthStr = ball.style.width;
   const halfBallWdth = Number(ballWdthStr.slice(0, -2)) / 2;
@@ -12,7 +14,7 @@ function detectCollision(ball, avatar, ballsArr) {
   const avatarCenter = avatarPos.left + halfAvatarWdth;
 
   _checkIfCollision(
-    ball,
+    // ball, instead of passing down, using global variable 'ball' from script1.js
     ballOneCenter,
     ballOnePos,
     avatarCenter,
@@ -22,7 +24,7 @@ function detectCollision(ball, avatar, ballsArr) {
 }
 
 function _checkIfCollision(
-  ball,
+  // ball,
   el1Center,
   el1Pos,
   el2Center,
@@ -37,12 +39,27 @@ function _checkIfCollision(
   ) {
     console.log("COLLISION!");
 
-    ball.style.background = _randomColor();
-    // ball.style.display = "none";
-    //isGoingRight = !isGoingRight;
+    // Prevent bug of ball repetitively hitting avatar:
+    const newTime = Date.now();
+    console.log("time: ", newTime - timeOriginal);
+    if (newTime - timeOriginal < 150) {
+      console.log("TOO CLOSE IN TIME!");
+      timeOriginal = Date.now();
+      return;
+    }
+
+    timeOriginal = Date.now();
+
+    // Change Direction of Ball
     isGoingDown = !isGoingDown;
 
+    // Change Ball Color
+    ball.style.background = _randomColor();
+
+    // Create New Random Ball
     createRandomBall(ballsArr);
+
+    // Add One to Current Score
     score.textContent++;
   }
 }

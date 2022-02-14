@@ -8,6 +8,7 @@ function createRandomBall(ballsArr) {
   _createBall(myObj.x, myObj.y, myObj.color, ballsArr);
 }
 
+// Physically put new ball on screen
 function _createBall(x, y, color, ballsArr) {
   // set div attributes
   var div = document.createElement("div");
