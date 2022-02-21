@@ -1,27 +1,127 @@
 let timeOriginal = Date.now();
 
-function detectCollision(ball, avatar, ballsArr) {
-  const ballWdthStr = ball.style.width;
-  const halfBallWdth = Number(ballWdthStr.slice(0, -2)) / 2;
-  const avatarWdthStr = avatar.style.width;
-  const halfAvatarWdth = Number(avatarWdthStr.slice(0, -2)) / 2;
+// function detectCollision(ball, avatar, ballsArr) {
+function detectCollision(ballOneRect) {
+  const avatarRect = avatar.getBoundingClientRect();
+  const halfAvatarWdth = avatarRect.width / 2;
 
-  const ballOnePos = ball.getBoundingClientRect();
-  //const ballTwoPos = ball2.getBoundingClientRect();
-  const avatarPos = avatar.getBoundingClientRect();
-  const ballOneCenter = ballOnePos.left + halfBallWdth;
-  // const ballTwoCenter = ballTwoPos.left + halfBallWdth;
-  const avatarCenter = avatarPos.left + halfAvatarWdth;
+  console.log("avatarRect.top", avatarRect.top);
 
-  _checkIfCollision(
-    // ball, instead of passing down, using global variable 'ball' from script1.js
-    ballOneCenter,
-    ballOnePos,
-    avatarCenter,
-    avatarPos,
-    ballsArr
-  );
+  const ballOneCenter = ballOneRect.left + ballOneRect.width / 2;
+  const avatarCenter = avatarRect.left + halfAvatarWdth;
+
+  // _checkIfCollision(
+  //   // ball, instead of passing down, using global variable 'ball' from script1.js
+  //   ballOneCenter,
+  //   ballOneRect,
+  //   avatarCenter,
+  //   avatarRect,
+  //   ballsArr
+  // );
+
+  avatarCollision(ballOneRect, avatarRect);
+
+  brickCollision(ballOneRect);
 }
+
+function avatarCollision(ballOneRect, avatarRect) {
+  if (ballOneRect.bottom >= avatarRect.top - ballOneRect.height / 2) {
+    if (
+      (ballOneRect.left >= avatarRect.left &&
+        ballOneRect.left <= avatarRect.right) ||
+      (ballOneRect.right <= avatarRect.right &&
+        ballOneRect.right >= avatarRect.left)
+    ) {
+      console.log("COLLLIIISSSSIOOOONNNN");
+
+      // Prevent bug of ball repetitively hitting avatar:
+      const newTime = Date.now();
+      console.log("time: ", newTime - timeOriginal);
+      if (newTime - timeOriginal < 250) {
+        console.log("TOO CLOSE IN TIME!");
+        timeOriginal = Date.now();
+        return;
+      }
+
+      timeOriginal = Date.now();
+
+      // Change Direction of Ball
+      // isGoingDown = !isGoingDown;
+      velocityY = -velocityY;
+
+      // Change Ball Color
+      ball.style.background = _randomColor();
+
+      // Create New Random Ball
+      createRandomBall(ballsArr);
+
+      // Add One to Current Score
+      score.textContent++;
+    }
+  }
+}
+
+function brickCollision(ballOneRect) {
+  for (let i = 0; i < bricksArr.length; i++) {
+    bricksArr[i].x = document
+      .querySelector(`.brick${bricksArr[i].i}`)
+      .getBoundingClientRect().left;
+
+    bricksArr[i].width = document
+      .querySelector(`.brick${bricksArr[i].i}`)
+      .getBoundingClientRect().width;
+
+    bricksArr[i].y = document
+      .querySelector(`.brick${bricksArr[i].i}`)
+      .getBoundingClientRect().bottom;
+
+    if (ballOneRect.top <= bricksArr[i].y + ballOneRect.height / 2) {
+      if (
+        ballOneRect.left >= bricksArr[i].x &&
+        ballOneRect.left <= bricksArr[i].x + bricksArr[i].width
+      ) {
+        console.log("BRICK COLLISSION");
+        velocityY = -velocityY;
+      }
+    }
+  }
+}
+
+// function xyz(ballOneRect, avatarRect) {
+//   console.log("avatarRect.top", avatarRect.top);
+
+//   if (
+//     (ballOneRect.left >= avatarRect.left &&
+//       ballOneRect.left <= avatarRect.right) ||
+//     (ballOneRect.right <= avatarRect.right &&
+//       ballOneRect.right >= avatarRect.left)
+//   ) {
+//     console.log("OVERLAP X");
+//   }
+
+//   // if (
+//   //   (ballOneRect.top >= avatarRect.top && ballOneRect.top <= avatarRect.bottom) ||
+//   //   (ballOneRect.bottom <= avatarRect.bottom && ballOneRect.bottom >= avatarRect.top)
+//   // ) {
+//   //   console.log("OVERLAP Y");
+//   // }
+//   if (ballOneRect.bottom >= avatarRect.top - ballOneRect.height / 2) {
+//     console.log("OVERLAP Y");
+//   }
+
+//   if (
+//     ((ballOneRect.left >= avatarRect.left &&
+//       ballOneRect.left <= avatarRect.right) ||
+//       (ballOneRect.right <= avatarRect.right &&
+//         ballOneRect.right >= avatarRect.left)) &&
+//     ((ballOneRect.top >= avatarRect.top &&
+//       ballOneRect.top <= avatarRect.bottom) ||
+//       (ballOneRect.bottom <= avatarRect.bottom &&
+//         ballOneRect.bottom >= avatarRect.top))
+//   ) {
+//     console.log("COLLLIIISSSSIOOOONNNN");
+//   }
+// }
 
 function _checkIfCollision(
   // ball,
@@ -42,7 +142,7 @@ function _checkIfCollision(
     // Prevent bug of ball repetitively hitting avatar:
     const newTime = Date.now();
     console.log("time: ", newTime - timeOriginal);
-    if (newTime - timeOriginal < 150) {
+    if (newTime - timeOriginal < 250) {
       console.log("TOO CLOSE IN TIME!");
       timeOriginal = Date.now();
       return;
@@ -51,7 +151,8 @@ function _checkIfCollision(
     timeOriginal = Date.now();
 
     // Change Direction of Ball
-    isGoingDown = !isGoingDown;
+    // isGoingDown = !isGoingDown;
+    velocityY = -velocityY;
 
     // Change Ball Color
     ball.style.background = _randomColor();
@@ -62,14 +163,6 @@ function _checkIfCollision(
     // Add One to Current Score
     score.textContent++;
   }
-}
-
-function _randomColor() {
-  var r = Math.floor(255 * Math.random());
-  var g = Math.floor(255 * Math.random());
-  var b = Math.floor(255 * Math.random());
-  var color = "rgb(" + r + ", " + g + ", " + b + ")";
-  return color;
 }
 
 //module.exports = { detectCollision };

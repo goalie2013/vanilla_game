@@ -1,10 +1,26 @@
 /* Background Image Full Screen */
-html {
-  background: url(./images/sky-background.png) no-repeat center center fixed;
+
+body {
+  background: url(./images/sky-background.png);
+  background-repeat: no-repeat;
+  background-position: center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.screenWrapper {
+  width: 90%;
+  height: 90vh;
+  border: 10px solid pink;
+  z-index: 11;
+  border-radius: 5px;
 }
 
 #ball {
@@ -12,39 +28,49 @@ html {
   border-radius: 50%;
   display: none;
   position: absolute;
-  width: 100px;
-  height: 100px;
-  left: 0px;
-  top: 0px;
+  width: 7vh;
+  height: 7vh;
+  left: 100px;
+  top: 100px;
   z-index: 5;
 }
 
-#ball2 {
-  left: 300px;
-  top: 0px;
-  background: red;
-}
-
-#trampoline {
+#avatar {
   position: absolute;
-  top: 650px;
-  left: 600px;
-  border: 3px solid blue;
+  top: 85%;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 5%;
+  width: 20%;
+  border: 10px solid black;
 }
+@media all and (max-width: 700px) {
+  #avatar {
+    width: 25%;
+  }
+}
+/* @media all and (max-height: 700px) {
+  #avatar {
+    height: 10%;
+  }
+} */
 
+/* #trampoline { position: absolute; top: 650px; left: 600px; border: 3px solid blue; } */
 #startMenu {
   position: absolute;
   left: 50%;
+  transform: translateX(-50%);
   top: 50%;
+  text-align: center;
 }
 
 /* Large screens */
 .menuBoard {
   display: flex;
-  height: 400px;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: flex-end;
+  height: auto;
+  /* flex-direction: column; */
+  justify-content: flex-end;
+  align-items: flex-start;
   border: 3px solid blue;
 }
 
@@ -59,18 +85,20 @@ html {
 
 #scorediv {
   /* position: absolute; */
-  width: 100px;
-  height: 120px;
-  left: 90%;
+  /* width: 100px; */
+  /* height: 120px; */
+  /* left: 90%; */
   /* top: 10%; */
   font-size: 24px;
   border: 2px solid black;
+  min-height: 80px;
 }
 
 .btn {
   /* position: absolute; */
   padding: 15px;
-  width: 100px;
+  /* width: 100px; */
+  min-height: 80px;
 }
 
 /* 
@@ -88,3 +116,34 @@ html {
 .hidden {
   display: none;
 }
+
+#brickWrapper {
+  width: 100%;
+  height: 25%;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  border: 5px solid green;
+}
+
+#brickWrapper > div {
+  /* flex-grow: 1; */
+}
+
+.bbb {
+  width: 20%;
+  height: 10%;
+  background-color: yellow;
+  border: 3px solid black;
+}
+
+/* #x {
+  position: absolute;
+  background: red;
+  width: 20px;
+  height: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(50%);
+  top: 50%;
+} */

@@ -1,40 +1,51 @@
 //import { detectCollision } from "./collisions";
 "use strict";
 
-const velocity = 30;
+let velocityX = 20;
+let velocityY = 20;
 let ballsArr = [];
-let positionX, positionY, isGoingRight, isGoingDown;
+const TOTAL_BRICKS = 20;
+let positionX, positionY;
+// let isGoingRight, isGoingDown;
 const startMenu = document.getElementById("startMenu");
 const startBtn = document.getElementById("startBtn");
+const gameScreen = document.querySelector(".screenWrapper");
 const ball = document.getElementById("ball");
-const ball2 = document.getElementById("ball2");
+// const ball2 = document.getElementById("ball2");
 const avatar = document.getElementById("avatar");
+const menuBoard = document.querySelector(".menuBoard");
 const resetBtn = document.getElementById("resetBtn");
 const mainMenuBtn = document.getElementById("mainMenuBtn");
-const menuBoard = document.querySelector(".menuBoard");
 const score = document.getElementById("score");
 const highScore = document.getElementById("high-score");
+const brickArea = document.getElementById("brickWrapper");
+const bricksArr = [];
 
 const init = function () {
-  positionX = 0;
-  positionY = 0;
-  isGoingRight = true;
-  isGoingDown = true;
+  // Initial Ball Position (in px)
+  positionX = 120;
+  positionY = 300;
+  // isGoingRight = true;
+  // isGoingDown = true;
 
   // Initial ball location
   ball.style.left = positionX + "px";
   ball.style.top = positionY + "px";
 
-  // Check for new Highscore
-  if (score.textContent > highScore.textContent)
-    highScore.textContent = score.textContent;
-  score.textContent = 0;
+  // ball.style.top = avatar.getBoundingClientRect().top + "px";
+  // ball.style.top =
+  //   parseInt(ball.style.top) - ball.getBoundingClientRect().height / 1.1 + "px";
 
-  // Remove all other balls
-  for (let i = ballsArr.length - 1; i >= 0; i--) {
-    ballsArr[i].remove();
-    ballsArr.pop();
-  }
+  checkIfNewHighScore();
+
+  removeAllBalls();
+
+  removeBricks();
+
+  // layBricksDown();
+  brickFactory(TOTAL_BRICKS);
+
+  // console.log(bricksArr[2].x, bricksArr[2].y);
 };
 
 // Event Listener to move avatar
@@ -61,57 +72,74 @@ mainMenuBtn.addEventListener("click", function () {
   init();
 });
 
-////// Setup game features
+setInterval(gamePlay, 100);
 
-init();
+function gamePlay() {
+  // const edgeWidth = parseInt(gameScreen.style.borderWidth);
 
-setInterval(moveBall, 100);
+  const ballOneRect = ball.getBoundingClientRect();
+  const gameScreenRect = gameScreen.getBoundingClientRect();
 
-function moveBall() {
-  // console.log(distanceBtwnEls(ball, ball2));
-  //console.log("aPos.x: ", ballPos.x);
-  // console.log("centerPt.style.left: ", centerPt.style.left);
-  //console.log("ballsArr size: ", ballsArr.length);
-  // console.log("outerWidth: ", window.outerWidth);
-  // console.log("innerWidth: ", window.innerWidth);
-  // console.log("ball.style.width: ", ball.getBoundingClientRect().width);
-  // console.log("ball.style.left: ", ball.style.left);
+  const gameWdth = gameScreenRect.width - ballOneRect.width / 2;
+  const gameWdthStart = gameScreenRect.x + ballOneRect.width / 2;
 
+  const gameHeight = gameScreenRect.height - ballOneRect.height;
+  const gameHeightStart = gameScreenRect.y + ballOneRect.height / 2;
+
+  // ????
   if (ball.style.display === "none") {
     console.log("NONEEEEE");
     return;
   }
 
-  const screenWdth = window.outerWidth - ball.getBoundingClientRect().width;
-  const screenHeight = window.outerHeight - ball.getBoundingClientRect().height;
+  moveBall();
 
-  // Move ball horizontally
-  if (isGoingRight) {
-    positionX = positionX + velocity;
-    ball.style.left = positionX + "px";
-  } else {
-    positionX = positionX - velocity;
-    ball.style.left = positionX + "px";
-  }
-
-  // Move ball vertically
-  if (isGoingDown) {
-    positionY = positionY + velocity;
-    ball.style.top = positionY + "px";
-  } else {
-    positionY = positionY - velocity;
-    ball.style.top = positionY + "px";
-  }
-
-  // Change x direction when x-boundary hit
-  if (positionX >= screenWdth || positionX <= 0) isGoingRight = !isGoingRight;
-
-  // Change y direction when y-boundary hit
-  if (positionY >= screenHeight || positionY <= 0) isGoingDown = !isGoingDown;
+  // change direction of ball when hits edge
+  changeDirectionIfNeeded(gameWdth, gameWdthStart, gameHeight, gameHeightStart);
 
   // Detect collision between ball and user
-  detectCollision(ball, avatar, ballsArr);
+  // detectCollision(ball, avatar, ballsArr);
+  detectCollision(ballOneRect);
 }
+
+// Event Listener Callback Function to move avatar
+function keyPressed() {
+  const SPEED = 4;
+
+  switch (event.code) {
+    case "ArrowRight":
+      // ball2.style.left = Number(ball2.style.left.slice(0, -2)) + 20 + "px";
+      let posX = Number(avatar.style.left.slice(0, -1));
+      if (posX) {
+        if (posX < 90) {
+          avatar.style.left = posX + SPEED + "%";
+          console.log(avatar.style.left);
+        }
+      } else {
+        console.log("EMPTY. Set to 50% + SPEED%");
+        avatar.style.left = 50 + SPEED + "%";
+      }
+
+      break;
+
+    case "ArrowLeft":
+      // ball2.style.left = Number(ball2.style.left.slice(0, -2)) - 20 + "px";
+      let possX = Number(avatar.style.left.slice(0, -1));
+      if (possX) {
+        if (possX > 5) {
+          avatar.style.left = possX - 4 + "%";
+          console.log(avatar.style.left);
+        }
+      } else {
+        console.log("EMPTY. Set to 50% - SPEED%");
+        avatar.style.left = 50 - SPEED + "%";
+      }
+
+      break;
+  }
+}
+
+///////////////////////////////////////////////////////////////
 
 function getPositionAtCenter(el) {
   const { top, left, width, height } = el.getBoundingClientRect();
@@ -125,23 +153,4 @@ function distanceBtwnEls(a, b) {
   const aPos = getPositionAtCenter(a);
   const bPos = getPositionAtCenter(b);
   return Math.hypot(aPos.x - bPos.x, aPos.y - bPos.y);
-}
-
-function keyPressed() {
-  switch (event.code) {
-    case "ArrowDown":
-      ball2.style.top = Number(ball2.style.top.slice(0, -2)) + 20 + "px";
-      break;
-    case "ArrowUp":
-      ball2.style.top = Number(ball2.style.top.slice(0, -2)) - 20 + "px";
-      break;
-    case "ArrowRight":
-      // ball2.style.left = Number(ball2.style.left.slice(0, -2)) + 20 + "px";
-      avatar.style.left = Number(avatar.style.left.slice(0, -2)) + 20 + "px";
-      break;
-    case "ArrowLeft":
-      // ball2.style.left = Number(ball2.style.left.slice(0, -2)) - 20 + "px";
-      avatar.style.left = Number(avatar.style.left.slice(0, -2)) - 20 + "px";
-      break;
-  }
 }

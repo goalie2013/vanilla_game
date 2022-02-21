@@ -12,44 +12,44 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="startMenu">
-      <h1>MY GAME</h1>
-      <button id="startBtn">PLAY</button>
-    </div>
+    <div class="screenWrapper">
 
-    <div id="ball"></div>
-
-    <!-- <div class="ballGeneral" id="ball2"></div> -->
-
-    <!-- TODO: Offset of image from center -->
-
-    <!--<img id="trampoline" src="./images/drawing.svg" alt="Trampoline" /> -->
-
-    <div
-      id="avatar"
-      style="
-        position: absolute;
-        top: 750px;
-        left: 600px;
-        height: auto;
-        width: 200px;
-        border: 10px solid black;
-      "
-    ></div>
-
-    <div class="menuBoard hidden">
-      <div id="scorediv">
-        Score: <span id="score"></span>
-        <br />
-        High Score: <span id="high-score"></span>
+      <div id="startMenu">
+        <h1>MY GAME</h1>
+        <button id="startBtn">PLAY</button>
       </div>
 
-      <button class="btn" id="resetBtn">Reset</button>
-      <button class="btn" id="mainMenuBtn">Main Menu</button>
-    </div>
+
+      <div id="x"></div>
+
+      <!-- <div class="ballGeneral" id="ball2"></div> -->
+
+      <!-- TODO: Offset of image from center -->
+
+      <!--<img id="trampoline" src="./images/drawing.svg" alt="Trampoline" /> -->
+
+      <div id="avatar"></div>
+
+      <div class="menuBoard hidden">
+        <div id="scorediv">
+          Score: <span id="score"></span>
+          <br />
+          High Score: <span id="high-score"></span>
+        </div>
+
+        <button class="btn" id="resetBtn">Reset</button>
+        <button class="btn" id="mainMenuBtn">Main Menu</button>
+      </div>
+
+      <div id="brickWrapper">
+      </div>
+
+      <div id="ball"></div>
+
   </body>
 
   <script src="script1.js"></script>
   <script src="collisions.js"></script>
   <script src="ball.js"></script>
+  <script src="helper.js"></script>
 </html>
