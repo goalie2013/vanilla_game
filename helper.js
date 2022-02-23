@@ -21,11 +21,11 @@ function removeBricks() {
 
 function brickFactory(num) {
   for (let i = 0; i < num; i++) {
-    const brick = { i };
+    const brick = { brickId: i };
     brick.element = document.createElement("div");
     brick.element.classList.add("bbb");
-    brick.element.classList.add(`brick${brick.i}`);
-    console.log(brick.i);
+    brick.element.classList.add(`brick${brick.brickId}`);
+    console.log(brick.brickId);
 
     brickArea.appendChild(brick.element);
     bricksArr.push(brick);
@@ -35,23 +35,23 @@ function brickFactory(num) {
 
 function levelOneBricksLayout() {}
 
-function layBricksDown() {
-  const TOTAL_BRICKS = 20;
+// function layBricksDown() {
+//   const TOTAL_BRICKS = 20;
 
-  for (let i = 0; i < TOTAL_BRICKS; i++) {
-    const brick = { i };
-    brick.element = document.createElement("div");
-    brick.element.classList.add("bbb");
-    brick.element.classList.add(`brick${brick.i}`);
-    console.log(brick.i);
+//   for (let i = 0; i < TOTAL_BRICKS; i++) {
+//     const brick = { i };
+//     brick.element = document.createElement("div");
+//     brick.element.classList.add("bbb");
+//     brick.element.classList.add(`brick${brick.i}`);
+//     console.log(brick.i);
 
-    brickArea.appendChild(brick.element);
+//     brickArea.appendChild(brick.element);
 
-    // Better to do this during setInterval() incase user switches dimensions of screen
-    // brick.x = document.querySelector(`.brick${i}`).getBoundingClientRect().left;
-    // brick.y = document.querySelector(`.brick${i}`).getBoundingClientRect().top;
+//     // Better to do this during setInterval() incase user switches dimensions of screen
+//     // brick.x = document.querySelector(`.brick${i}`).getBoundingClientRect().left;
+//     // brick.y = document.querySelector(`.brick${i}`).getBoundingClientRect().top;
 
-    bricksArr.push(brick);
-  }
-  console.log("bricksArr size: ", bricksArr.length);
-}
+//     bricksArr.push(brick);
+//   }
+//   console.log("bricksArr size: ", bricksArr.length);
+// }

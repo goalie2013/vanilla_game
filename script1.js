@@ -20,6 +20,7 @@ const score = document.getElementById("score");
 const highScore = document.getElementById("high-score");
 const brickArea = document.getElementById("brickWrapper");
 const bricksArr = [];
+var interval;
 
 const init = function () {
   // Initial Ball Position (in px)
@@ -43,11 +44,10 @@ const init = function () {
   removeBricks();
 
   // layBricksDown();
-  brickFactory(TOTAL_BRICKS);
+  brickFactory(5);
 
   // console.log(bricksArr[2].x, bricksArr[2].y);
 };
-
 // Event Listener to move avatar
 document.addEventListener("keydown", keyPressed);
 
@@ -57,6 +57,7 @@ startBtn.addEventListener("click", function () {
   ball.style.display = "block";
   menuBoard.classList.remove("hidden");
   init();
+  interval = setInterval(gamePlay, 30);
 });
 
 // Event Listener to restart the game
@@ -70,21 +71,18 @@ mainMenuBtn.addEventListener("click", function () {
   ball.style.display = "none";
   menuBoard.classList.add("hidden");
   init();
+  clearInterval(interval);
 });
-
-setInterval(gamePlay, 100);
 
 function gamePlay() {
   // const edgeWidth = parseInt(gameScreen.style.borderWidth);
-
   const ballOneRect = ball.getBoundingClientRect();
-  const gameScreenRect = gameScreen.getBoundingClientRect();
 
-  const gameWdth = gameScreenRect.width - ballOneRect.width / 2;
-  const gameWdthStart = gameScreenRect.x + ballOneRect.width / 2;
-
-  const gameHeight = gameScreenRect.height - ballOneRect.height;
-  const gameHeightStart = gameScreenRect.y + ballOneRect.height / 2;
+  if (bricksArr.length === 0 && ball.style.display !== "none") {
+    console.log("GAME OVER");
+    velocityX = 0;
+    velocityY = 0;
+  }
 
   // ????
   if (ball.style.display === "none") {
@@ -95,7 +93,7 @@ function gamePlay() {
   moveBall();
 
   // change direction of ball when hits edge
-  changeDirectionIfNeeded(gameWdth, gameWdthStart, gameHeight, gameHeightStart);
+  changeDirectionIfNeeded(ballOneRect);
 
   // Detect collision between ball and user
   // detectCollision(ball, avatar, ballsArr);
@@ -103,7 +101,7 @@ function gamePlay() {
 }
 
 // Event Listener Callback Function to move avatar
-function keyPressed() {
+function keyPressed(event) {
   const SPEED = 4;
 
   switch (event.code) {

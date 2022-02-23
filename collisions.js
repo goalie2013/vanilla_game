@@ -63,27 +63,53 @@ function avatarCollision(ballOneRect, avatarRect) {
 
 function brickCollision(ballOneRect) {
   for (let i = 0; i < bricksArr.length; i++) {
-    bricksArr[i].x = document
-      .querySelector(`.brick${bricksArr[i].i}`)
-      .getBoundingClientRect().left;
+    const brickEl = document.querySelector(`.brick${bricksArr[i].brickId}`);
+    const brickRect = brickEl.getBoundingClientRect();
+    const brick = bricksArr[i];
 
-    bricksArr[i].width = document
-      .querySelector(`.brick${bricksArr[i].i}`)
-      .getBoundingClientRect().width;
+    brick.x = brickRect.left;
+    brick.y = brickRect.bottom;
+    brick.width = brickRect.width;
+    brick.height = brickRect.height;
 
-    bricksArr[i].y = document
-      .querySelector(`.brick${bricksArr[i].i}`)
-      .getBoundingClientRect().bottom;
+    // if (ballOneRect.top <= brick.y + ballOneRect.height / 2) {
+    //   if (
+    //     (ballOneRect.left >= brick.x &&
+    //       ballOneRect.left <= brick.x + brick.width) ||
+    //     (ballOneRect.right <= brick.x + brick.width &&
+    //       ballOneRect.right >= brick.x)
+    //   ) {
 
-    if (ballOneRect.top <= bricksArr[i].y + ballOneRect.height / 2) {
-      if (
-        ballOneRect.left >= bricksArr[i].x &&
-        ballOneRect.left <= bricksArr[i].x + bricksArr[i].width
-      ) {
-        console.log("BRICK COLLISSION");
-        velocityY = -velocityY;
+    if (
+      ballOneRect.top <= brick.y + ballOneRect.height / 2 &&
+      ballOneRect.top >= brick.y - brick.height &&
+      ballOneRect.left >= brick.x &&
+      ballOneRect.left <= brick.x + brick.width
+    ) {
+      console.log("BRICK COLLISSION");
+
+      // Prevent bug of ball repetitively hitting avatar:
+      const newTime = Date.now();
+      console.log("time: ", newTime - timeOriginal);
+      if (newTime - timeOriginal < 250) {
+        console.log("TOO CLOSE IN TIME!");
+        timeOriginal = Date.now();
+        return;
       }
+
+      timeOriginal = Date.now();
+      velocityY = -velocityY;
+
+      console.log("brick", brickEl);
+
+      // Remove brick from screen
+      // brickArea.removeChild(brick);
+      brickEl.style.visibility = "hidden";
+
+      // Remove brick from array
+      bricksArr.splice(i, 1);
     }
+    //}
   }
 }
 

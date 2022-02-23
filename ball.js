@@ -69,12 +69,15 @@ function moveBall() {
   ball.style.top = positionY + "px";
 }
 
-function changeDirectionIfNeeded(
-  gameWdth,
-  gameWdthStart,
-  gameHeight,
-  gameHeightStart
-) {
+function changeDirectionIfNeeded(ballOneRect) {
+  const gameScreenRect = gameScreen.getBoundingClientRect();
+
+  const gameWdth = gameScreenRect.width - ballOneRect.width / 2;
+  const gameWdthStart = gameScreenRect.x + ballOneRect.width / 2;
+
+  const gameHeight = gameScreenRect.height - ballOneRect.height;
+  const gameHeightStart = gameScreenRect.y + ballOneRect.height / 2;
+
   //   // Change x direction when x-boundary hit
   //   if (positionX >= gameWdth || positionX <= gameWdthStart)
   //     isGoingRight = !isGoingRight;
