@@ -2,6 +2,8 @@
 
 Simple game like Brick Breaker using Vanilla HTML CSS JS
 
+Play the game here: https://goalie2013.github.io/vanilla_game/
+
 The focus of this project was:
 
 - Using Local Git with Github Repository
